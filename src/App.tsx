@@ -1,7 +1,18 @@
+import { configureGumnut } from '@gumnutdev/react';
 import './App.css'
 import CatForm from './components/CatForm'
+import Config from './components/Config'
+
 
 function App() {
+
+  // configureGumnut({
+  //   projectId: 'cool-cats',
+  //   localDevKey: '_DO_NOT_USE_IN_PROD_ksSKzxXfofB_pWoBoQG9bw',
+  //   remoteHost: 'v0-collab.dev.gumnut.dev',
+  // });
+
+    
   return (
     <div className="grid m-8">
       <header className="mb-6">
@@ -12,7 +23,8 @@ function App() {
       </header>
       
       <main>
-        <CatForm />
+        {/* <CatForm /> */}
+        <Config />
       </main>
     </div>
   )
