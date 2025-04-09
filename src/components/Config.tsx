@@ -1,9 +1,38 @@
 import { useGumnutDoc, buildTestToken, GumnutText, GumnutData } from '@gumnutdev/react';
+import { useEffect } from 'react';
+import { ChangeEvent } from 'react';
+import { useState } from 'react';
 
 function Config() {
     const getToken = () => buildTestToken();
     const scope = useGumnutDoc({ getToken, docId: 'config' });
 
+    const [lastSelected, setLastSelected] = useState("lastSelected");
+
+    const radioButtons = [
+        "kitty",
+        "gato",
+        "chungus"
+    ];
+
+    useEffect(() => {
+        const catNameElements = document.querySelectorAll('[name="catSize"]');
+        
+        const handleCatNameChange = (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            setLastSelected(target.value);
+        };
+
+        catNameElements.forEach(element => {
+            element.addEventListener('change', handleCatNameChange);
+        });
+
+        return () => {
+            catNameElements.forEach(element => {
+                element.removeEventListener('change', handleCatNameChange);
+            });
+        };
+    }, []);
 
     return (
         <div>
@@ -22,45 +51,30 @@ function Config() {
             <GumnutData
                 control={scope.control}
                 name="catSize"
-                render={(arg) => (
+                render={({field, state}) => (
                     <div className="flex space-x-4 mt-4">
-                        <label className={`flex items-center space-x-2 ${arg.state.dirty && arg.field.value === 'kitty' ? 'glow-underline' : ''}`}>
-                            <input {...arg.field}
-                                type="radio"
-                                name="catSize"
-                                value="kitty"
-                                className="radio"
-                                checked={arg.field.value === 'kitty'}
-                            />
-                            <span className="text-sm">Kitty!</span>
-                        </label>
-                        <label className={`flex items-center space-x-2 ${arg.state.dirty && arg.field.value === 'gato' ? 'glow-underline' : ''}`}>
-                            <input {...arg.field}
-                                type="radio"
-                                name="catSize"
-                                value="gato"
-                                className="radio"
-                                checked={arg.field.value === 'gato'}
-                            />
-                            <span className="text-sm">Gato</span>
-                        </label>
-                        <label className={`flex items-center space-x-2 ${arg.state.dirty && arg.field.value === 'chungus' ? 'glow-underline' : ''}`}>
-                            <input {...arg.field}
-                                type="radio"
-                                name="catSize"
-                                value="chungus"
-                                className="radio checked:glow-underline"
-                                checked={arg.field.value === 'chungus'}
-                            />
-                            <span className="text-sm">Chungus</span>
-                        </label>
-                        {arg.state.clients?.length > 0 && (
+                        {radioButtons.map(size => (
+                            <label key={size} className={`flex items-center space-x-2 
+                                ${state.dirty && 
+                                    field.value === size && 
+                                    lastSelected != size ? 'glow-underline' : ''}`
+                            }>
+                                <input {...field}
+                                    type="radio"
+                                    name="catSize"
+                                    value={size}
+                                    className="radio"
+                                    checked={field.value === size}
+                                />
+                                <span className="text-sm">{size}</span>
+                            </label>
+                        ))}
+                        {state.clients?.length > 0 && (
                             <>  
-                                <span className="vr border-l-2 border-primary-500"></span>
-                                <span className="group relative">
-                                    <span className="badge preset-tonal-primary">✍🏻: {arg.state.clients.length}</span>
-                                    <span className="absolute left-full ml-2 whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100">
-                                    {arg.state.clients.join(', ')}
+                                <span className="group">
+                                    <span className="badge preset-tonal-primary">✍🏻: {state.clients.length}</span>
+                                    <span className="left-full ml-2 opacity-0 transition-opacity group-hover:opacity-100 text-tonal-primary">
+                                        {state.clients.join(', ')}
                                     </span>
                                 </span>
                             </>
@@ -69,7 +83,7 @@ function Config() {
                 )}
             />
         </div>
-    )
+    );
 }
 
 export default Config;

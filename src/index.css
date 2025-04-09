@@ -10,7 +10,7 @@
 @custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
 
 :root {
-  --glow-color: theme('colors.primary.500');
+  --glow-color: theme('colors.secondary.500');
 }
 
 @keyframes glowPulse {
@@ -66,8 +66,8 @@
   right: 0;
   bottom: -2px;
   height: 2px;
-  background-color: var(--glow-color);
-  box-shadow: 0 0 8px var(--glow-color);
+  background-color: var(--color-secondary-500);
+  box-shadow: 0 0 8px var(--color-secondary-500);
   animation: glowPulse 9s ease-out forwards;
   transform-origin: center;
 }
