@@ -79,7 +79,7 @@ function CatForm() {
 
   return (
     <div className="card preset-filled-surface-50-950 border-[1px] border-surface-200-800 w-full p-4">
-        <div><GumnutStatus /></div>
+      <div><GumnutStatus /></div>
       <div className="grid grid-cols-5 gap-4">
         <label htmlFor="catName" className="col-span-2 block text-sm font-medium">
           <span className="label-text mb-1">Cat name</span>
