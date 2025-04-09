@@ -30,6 +30,7 @@ function CatForm() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log("handleChange: ", e.target)
     const { name, value, type } = e.target;
     
     if (type === 'checkbox') {
@@ -55,27 +56,29 @@ function CatForm() {
   };
 
   const handleSave = async () => {
+    console.log("Saving Data")
+
     scope.actions.commit(async ({ changes }) => {
-        // "changes" contains just the dirty fields
-        await (async (changes) => {
-          console.log(changes);
-          setSaveStatus('saving');
-          localStorage.setItem("catFormData", JSON.stringify(formData));
-          setSaveStatus('saved');
-          setTimeout(() => setSaveStatus('idle'), 2000);
-        })();
-      });
+        console.log("changes: ", changes)
+
+        const changedData = {...formData, ...changes}
+
+        setFormData(changedData)
+
+        console.log("setting local storage: ", changedData)
+        localStorage.setItem("catFormData", JSON.stringify(changedData));
+    });
   }
 
 
   const getToken = () => buildTestToken();
   const scope = useGumnutDoc({ getToken, docId: 'cool-cats' });
 
-//   useEffect(() => {
-//     if (formData !== undefined) {
-//       scope.actions.load(formData);
-//     }
-//   }, [formData]);
+  useEffect(() => {
+    if (formData !== undefined) {
+      scope.actions.load(formData);
+    }
+  }, [formData]);
 
   return (
     <div className="card preset-filled-surface-50-950 border-[1px] border-surface-200-800 w-full p-4">
@@ -95,15 +98,6 @@ function CatForm() {
                 borderRadius: '4px',
               }}
             />
-            {/* <input 
-              type="text" 
-              className="p-3 input border-[1px] border-surface-300-700" 
-              placeholder="Maru" 
-              id="catName" 
-              name="catName"
-              value={formData.catName}
-              onChange={handleChange}
-            /> */}
           </div>
         </label>
 
