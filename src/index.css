@@ -8,3 +8,66 @@
 
 /* Allow for light and dark mode using body attribute */
 @custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
+
+:root {
+  --glow-color: theme('colors.primary.500');
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.95);
+  }
+  20% {
+    opacity: 0.8;
+    transform: scaleX(1);
+  }
+  30% {
+    opacity: 0.5;
+    transform: scaleX(0.95);
+  }
+  40% {
+    opacity: 0.85;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scaleX(0.95);
+  }
+  60% {
+    opacity: 0.90;
+    transform: scaleX(1);
+  }
+  70% {
+    opacity: 0.5;
+    transform: scaleX(0.95);
+  }
+  80% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  90% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100%{
+    opacity: 0;
+  }
+}
+
+.glow-underline {
+  position: relative;
+}
+
+.glow-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background-color: var(--glow-color);
+  box-shadow: 0 0 8px var(--glow-color);
+  animation: glowPulse 9s ease-out forwards;
+  transform-origin: center;
+}

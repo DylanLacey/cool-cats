@@ -23,8 +23,8 @@ function App() {
       </header>
       
       <main>
-        <CatForm />
-        {/* <Config /> */}
+        {/* <CatForm /> */}
+        <Config />
       </main>
     </div>
   )
