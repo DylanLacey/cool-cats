@@ -67,11 +67,6 @@ function CatForm() {
       });
   }
 
-  configureGumnut({
-    projectId: 'cool-cats',
-    localDevKey: '_DO_NOT_USE_IN_PROD_ksSKzxXfofB_pWoBoQG9bw',
-    remoteHost: 'v0-collab.dev.gumnut.dev',
-  });
 
   const getToken = () => buildTestToken();
   const scope = useGumnutDoc({ getToken, docId: 'cool-cats' });
@@ -91,7 +86,7 @@ function CatForm() {
           <div className="flex flex-row items-center gap-2">
             <GumnutText
               control={scope.control}
-              name="catName"
+              name="catName "
               value={formData.catName}
               className="p-3 input border-[1px] border-surface-300-700" 
               style={{

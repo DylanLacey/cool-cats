@@ -6,11 +6,11 @@ import Config from './components/Config'
 
 function App() {
 
-  // configureGumnut({
-  //   projectId: 'cool-cats',
-  //   localDevKey: '_DO_NOT_USE_IN_PROD_ksSKzxXfofB_pWoBoQG9bw',
-  //   remoteHost: 'v0-collab.dev.gumnut.dev',
-  // });
+  configureGumnut({
+    projectId: 'cool-cats',
+    localDevKey: '_DO_NOT_USE_IN_PROD_ksSKzxXfofB_pWoBoQG9bw',
+    remoteHost: 'v0-collab.dev.gumnut.dev',
+  });
 
     
   return (
@@ -23,8 +23,8 @@ function App() {
       </header>
       
       <main>
-        {/* <CatForm /> */}
-        <Config />
+        <CatForm />
+        {/* <Config /> */}
       </main>
     </div>
   )
