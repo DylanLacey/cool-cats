@@ -2,6 +2,7 @@ import { useGumnutDoc, buildTestToken, GumnutText, GumnutData } from '@gumnutdev
 import { useEffect } from 'react';
 import { ChangeEvent } from 'react';
 import { useState } from 'react';
+import { GumnutSingleChoice } from './GumnutSingleChoice';
 
 function Config() {
     const getToken = () => buildTestToken();
@@ -13,49 +14,39 @@ function Config() {
         "kitty",
         "gato",
         "chungus"
-    ]
+    ];
 
     useEffect(() => {
         const catNameElements = document.querySelectorAll('[name="catSize"]');
         
-        const handleCatNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-            setLastSelected(e.target.value);
+        const handleCatNameChange = (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            setLastSelected(target.value);
         };
 
         catNameElements.forEach(element => {
-            element.addEventListener('change', (e: ChangeEvent<HTMLInputElement>) => {
-                setLastSelected(e.target.value);
-            });
+            element.addEventListener('change', handleCatNameChange);
         });
+
         return () => {
             catNameElements.forEach(element => {
-                element.removeEventListener('change', handleCatNameChange as EventListener);
+                element.removeEventListener('change', handleCatNameChange);
             });
         };
     }, []);
 
     return (
         <div>
-            <GumnutData
+            <GumnutSingleChoice
                 control={scope.control}
-                name="catBreed"
-                render={(arg) => (
-                    <select {...arg.field}>
-                        <option value="Abbysinian">Abbysinian</option>
-                        <option value="Persian">Persian</option>
-                        <option value="Siamese">Siamese</option>
-                    </select>
-                )} 
-            />
-
-            <GumnutData
-                control={scope.control}
+                ignoreRestore={false}
                 name="catSize"
                 render={({field, state}) => (
+                    console.log("HERE WE GO " + field.value + " " + lastSelected),
                     <div className="flex space-x-4 mt-4">
                         {radioButtons.map(size => (
                             <label key={size} className={`flex items-center space-x-2 
-                                ${  state.dirty && 
+                                ${state.dirty && 
                                     field.value === size && 
                                     lastSelected != size ? 'glow-underline' : ''}`
                             }>
@@ -74,7 +65,7 @@ function Config() {
                                 <span className="group">
                                     <span className="badge preset-tonal-primary">✍🏻: {state.clients.length}</span>
                                     <span className="left-full ml-2 opacity-0 transition-opacity group-hover:opacity-100 text-tonal-primary">
-                                    {state.clients.join(', ')}
+                                        {state.clients.join(', ')}
                                     </span>
                                 </span>
                             </>
@@ -83,7 +74,7 @@ function Config() {
                 )}
             />
         </div>
-    )
+    );
 }
 
 export default Config;

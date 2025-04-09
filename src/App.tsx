@@ -2,6 +2,7 @@ import { configureGumnut } from '@gumnutdev/react';
 import './App.css'
 import CatForm from './components/CatForm'
 import Config from './components/Config'
+import SingleConfig from './components/SingleConfig';
 
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
       
       <main>
         {/* <CatForm /> */}
-        <Config />
+        <SingleConfig />
       </main>
     </div>
   )
