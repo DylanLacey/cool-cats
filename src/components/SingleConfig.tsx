@@ -39,16 +39,13 @@ function Config() {
         <div>
             <GumnutSingleChoice
                 control={scope.control}
-                ignoreRestore={false}
+                highlightOnRestore={false}
                 name="catSize"
                 render={({field, state}) => (
-                    console.log("HERE WE GO " + field.value + " " + lastSelected),
                     <div className="flex space-x-4 mt-4">
                         {radioButtons.map(size => (
                             <label key={size} className={`flex items-center space-x-2 
-                                ${state.dirty && 
-                                    field.value === size && 
-                                    lastSelected != size ? 'glow-underline' : ''}`
+                                ${state.highlightField === size ? 'glow-underline' : ''}`
                             }>
                                 <input {...field}
                                     type="radio"

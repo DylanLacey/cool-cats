@@ -1,3 +1,4 @@
+import { booleanLiteral } from '@babel/types';
 import type { GumnutNode, GumnutDoc, GetToken } from '@gumnutdev/api';
 import { type ChangeEvent, type FC, useEffect, useRef, useState } from 'react';
 
@@ -58,6 +59,11 @@ export type RenderGumnutSingleFunc = (arg: {
      * The clients currently focused on this node.
      */
     clients: Readonly<string[]>;
+
+    /**
+     * The last user selected value.
+     */
+    highlightField: string;
   };
 }) => any;
 
@@ -80,13 +86,14 @@ export type GumnutSingleChoiceProps = {
 };
 
 export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
+  const lastSelected = useRef<{value: string, isNew: boolean}>({value: '', isNew: false});
   const doc = useGumnutDocInternal(props.control);
 
   const nodeRef = useRef<GumnutNode>(null);
   const [value, setValue] = useState<string>('');
   const [dirty, setDirty] = useState<boolean>(false);
   const [clients, setClients] = useState<string[]>([]);
-  const [lastChosen, setLastChosen] = useState<string>('');
+  const [highlightField, setHighlightField] = useState<string>('');
 
   useEffect(() => {
     const node = doc?.useNode(props.name);
@@ -97,15 +104,28 @@ export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
 
     const c = new AbortController();
     nodeRef.current = node;
-
+    
     const refreshValue = () => {
-      console.log("refreshValue", node.contents())
       setValue(node.contents());
       setDirty(node.isDirty());
 
-      if (props.highlightOnRestore && lastChosen != node.contents()) {
-        console.log("setting lastChosen to empty")
-        setLastChosen('');
+      if (node.isDirty()) {
+        if (lastSelected.current.value != node.contents() && 
+            lastSelected.current.isNew) {
+          lastSelected.current.isNew = false;
+        }
+        
+        if (!lastSelected.current.isNew) {
+          if (lastSelected.current.value == node.contents()) {
+            if (props.highlightOnRestore) {
+              setHighlightField(node.contents());
+            }
+            lastSelected.current.value = "BHBB"
+            lastSelected.current.isNew = false;
+          } else {
+            setHighlightField(node.contents());
+          }
+        }
       }
     };
     nodeRef.current.addListener('value', refreshValue, c.signal);
@@ -122,7 +142,6 @@ export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
   return props.render({
     field: {
       onChange(e: ChangeEvent) {
-        console.log("onChange", e)
         let value = 'value' in e.target ? e.target.value : undefined;
 
         if (e.target instanceof HTMLInputElement) {
@@ -135,7 +154,7 @@ export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
         }
 
         if (typeof value === 'string') {
-          setLastChosen(value);
+          lastSelected.current = {value: value, isNew: true};
           nodeRef.current?.replaceWith(value);
         }
       },
@@ -158,6 +177,7 @@ export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
       dirty,
       clients,
       value,
+      highlightField,
     },
   });
 };
