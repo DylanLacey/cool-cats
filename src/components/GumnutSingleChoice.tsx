@@ -110,20 +110,25 @@ export const GumnutSingleChoice: FC<GumnutSingleChoiceProps> = (props) => {
       setDirty(node.isDirty());
 
       if (node.isDirty()) {
-        if (lastSelected.current.value != node.contents() && 
-            lastSelected.current.isNew) {
+        const currentValue = node.contents();
+        const lastValue = lastSelected.current.value;
+
+        // Clear isNew flag if value changed since last selection
+        if (currentValue !== lastValue && lastSelected.current.isNew) {
           lastSelected.current.isNew = false;
         }
-        
+
+        // Only handle highlighting for non-new selections
         if (!lastSelected.current.isNew) {
-          if (lastSelected.current.value == node.contents()) {
+          // Value restored to previous selection
+          if (currentValue === lastValue) {
             if (props.highlightOnRestore) {
-              setHighlightField(node.contents());
+              setHighlightField(currentValue);
             }
-            lastSelected.current.value = "BHBB"
-            lastSelected.current.isNew = false;
+            lastSelected.current.value = "BHBB"; // Reset last selected value
           } else {
-            setHighlightField(node.contents());
+            // Value changed to something else
+            setHighlightField(currentValue);
           }
         }
       }
